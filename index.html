@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D心脏血管系统 - 人体循环系统探索</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 350px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        #info-panel h2 {
+            color: #d32f2f;
+            margin-bottom: 10px;
+            font-size: 24px;
+            border-bottom: 3px solid #d32f2f;
+            padding-bottom: 8px;
+        }
+
+        #info-panel h3 {
+            color: #1976d2;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        #info-panel p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-heart {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-artery {
+            background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+            color: white;
+        }
+
+        .btn-vein {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-capillary {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        #title {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        #title h1 {
+            color: #d32f2f;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        #title p {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 0 0;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div id="title">
+        <h1>🫀 人体循环系统</h1>
+        <p>点击不同部位探索心脏与血管的奥秘</p>
+    </div>
+
+    <div id="info-panel">
+        <h2>欢迎来到循环系统探索</h2>
+        <p>👋 点击下方按钮或直接点击3D模型，探索心脏和血管的神奇世界！</p>
+        <h3>💡 操作提示：</h3>
+        <p>• <strong>鼠标左键拖动</strong>：旋转视角</p>
+        <p>• <strong>鼠标滚轮</strong>：缩放</p>
+        <p>• <strong>点击模型</strong>：查看详细信息</p>
+    </div>
+
+    <div id="controls">
+        <button class="control-btn btn-heart" data-part="heart">心脏</button>
+        <button class="control-btn btn-artery" data-part="artery">动脉</button>
+        <button class="control-btn btn-vein" data-part="vein">静脉</button>
+        <button class="control-btn btn-capillary" data-part="capillary">毛细血管</button>
+        <button class="control-btn btn-reset" data-part="reset">重置</button>
+    </div>
+
+    <div class="loading" id="loading">加载中...</div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>
