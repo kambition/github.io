@@ -1,0 +1,33 @@
+<script type="module">
+import * as THREE from 'https://cdn.skypack.dev/three@0.160.0';
+import {GLTFLoader} from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const light = new THREE.HemisphereLight(0xffffff,0x444444,1.5);
+scene.add(light,new THREE.DirectionalLight(0xffffff,1));
+
+let mixer, heart;
+new GLTFLoader().load('heart-vessels.glb', ({scene:gltf})=>{
+  scene.add(gltf);
+  heart = gltf.getObjectByName('Heart');          // 名称在 Blender 里已打组
+  mixer = new THREE.AnimationMixer(gltf);
+  gltf.animations.forEach(clip=>mixer.clipAction(clip).play());
+});
+
+// 心跳脉冲
+function pulse(){
+  if(heart){
+    const s = 1 + 0.08*Math.sin(performance.now()/200);
+    heart.scale.set(s,s,s);
+  }
+  requestAnimationFrame(pulse);
+  mixer?.update(0.016);
+  renderer.render(scene,camera);
+}
+pulse();
+</script>

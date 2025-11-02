@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D心脏血管系统 - 人体循环系统探索</title>
+    <title>人体解剖探索 - 3D交互式生物学习系统</title>
     <style>
         * {
             margin: 0;
@@ -12,9 +12,11 @@
         }
 
         body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: radial-gradient(ellipse at bottom, #0d1520 0%, #000000 100%);
+            margin: 0;
+            padding: 0;
         }
 
         #canvas-container {
@@ -27,69 +29,98 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 350px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(10, 15, 30, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 380px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(100, 150, 255, 0.1);
+            border: 1px solid rgba(100, 150, 255, 0.2);
             z-index: 100;
         }
 
         #info-panel h2 {
-            color: #d32f2f;
-            margin-bottom: 10px;
-            font-size: 24px;
-            border-bottom: 3px solid #d32f2f;
-            padding-bottom: 8px;
+            color: #ff6b8a;
+            margin-bottom: 12px;
+            font-size: 26px;
+            border-bottom: 3px solid #ff6b8a;
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 107, 138, 0.5);
         }
 
         #info-panel h3 {
-            color: #1976d2;
-            margin-top: 15px;
-            margin-bottom: 8px;
+            color: #6bb6ff;
+            margin-top: 16px;
+            margin-bottom: 10px;
             font-size: 18px;
+            text-shadow: 0 0 8px rgba(107, 182, 255, 0.4);
         }
 
         #info-panel p {
-            color: #333;
-            line-height: 1.8;
+            color: #e0e6ed;
+            line-height: 1.9;
             font-size: 14px;
             margin-bottom: 10px;
         }
 
         .highlight {
-            color: #d32f2f;
+            color: #ffa94d;
             font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 169, 77, 0.5);
         }
 
         #controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 25px;
-            border-radius: 50px;
+            background: rgba(10, 15, 30, 0.92);
+            backdrop-filter: blur(15px);
+            padding: 18px 30px;
+            border-radius: 60px;
             display: flex;
-            gap: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            gap: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(100, 150, 255, 0.15);
+            border: 1px solid rgba(100, 150, 255, 0.25);
             z-index: 100;
         }
 
         .control-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
+            padding: 12px 24px;
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            border-radius: 30px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .btn-heart {
@@ -97,18 +128,28 @@
             color: white;
         }
 
-        .btn-artery {
-            background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+        .btn-skeleton {
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+            color: #2c3e50;
+        }
+
+        .btn-lungs {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
             color: white;
         }
 
-        .btn-vein {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+        .btn-liver {
+            background: linear-gradient(135deg, #d35400, #e67e22);
             color: white;
         }
 
-        .btn-capillary {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        .btn-stomach {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            color: white;
+        }
+
+        .btn-circulation {
+            background: linear-gradient(135deg, #e74c3c 0%, #3498db 100%);
             color: white;
         }
 
@@ -121,23 +162,26 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(10, 15, 30, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(100, 150, 255, 0.1);
+            border: 1px solid rgba(100, 150, 255, 0.2);
             z-index: 100;
         }
 
         #title h1 {
-            color: #d32f2f;
-            font-size: 28px;
+            color: #ff6b8a;
+            font-size: 32px;
             margin: 0;
+            text-shadow: 0 0 15px rgba(255, 107, 138, 0.6);
         }
 
         #title p {
-            color: #666;
+            color: #a0b5d0;
             font-size: 14px;
-            margin: 5px 0 0 0;
+            margin: 8px 0 0 0;
         }
 
         .loading {
@@ -155,25 +199,27 @@
     <div id="canvas-container"></div>
     
     <div id="title">
-        <h1>🫀 人体循环系统</h1>
-        <p>点击不同部位探索心脏与血管的奥秘</p>
+        <h1>🫀 人体解剖探索</h1>
+        <p>点击不同器官探索人体的奥秘</p>
     </div>
 
     <div id="info-panel">
-        <h2>欢迎来到循环系统探索</h2>
-        <p>👋 点击下方按钮或直接点击3D模型，探索心脏和血管的神奇世界！</p>
+        <h2>欢迎来到人体解剖探索</h2>
+        <p>👋 点击3D模型的任何部位，探索人体器官的神奇世界！</p>
         <h3>💡 操作提示：</h3>
         <p>• <strong>鼠标左键拖动</strong>：旋转视角</p>
         <p>• <strong>鼠标滚轮</strong>：缩放</p>
-        <p>• <strong>点击模型</strong>：查看详细信息</p>
+        <p>• <strong>点击器官</strong>：查看详细信息</p>
+        <p>• <strong>观察血液流动</strong>：红色表示动脉，蓝色表示静脉</p>
     </div>
 
     <div id="controls">
         <button class="control-btn btn-heart" data-part="heart">心脏</button>
-        <button class="control-btn btn-artery" data-part="artery">动脉</button>
-        <button class="control-btn btn-vein" data-part="vein">静脉</button>
-        <button class="control-btn btn-capillary" data-part="capillary">毛细血管</button>
-        <button class="control-btn btn-reset" data-part="reset">重置</button>
+        <button class="control-btn btn-lungs" data-part="lungs">肺</button>
+        <button class="control-btn btn-liver" data-part="liver">肝脏</button>
+        <button class="control-btn btn-stomach" data-part="stomach">胃</button>
+        <button class="control-btn btn-circulation" data-part="circulation">血液循环</button>
+        <button class="control-btn btn-reset" data-part="reset">重置视图</button>
     </div>
 
     <div class="loading" id="loading">加载中...</div>
